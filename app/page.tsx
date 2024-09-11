@@ -1,21 +1,26 @@
 "use client"
 
 import React from 'react';
-import { Form, Input, Button, Upload, message } from 'antd';
+import { Form, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Image from "next/image";
+import { useRouter } from 'next/navigation';  // Use Next.js router
 
 const { Dragger } = Upload;
 
 export default function Home() {
-  const onFinish = () => {
-    //TODO save image somewhere
+  const router = useRouter();  // Use Next.js router
+
+  const onFinish = (values: any) => {
+    console.log('Form values: ', values);
+    // Handle form submission logic here
+    router.push('/injuryDiagnosisPage');  // Redirect to injury diagnosis page
   };
 
-  const props = {
+  const uploadProps = {
     name: 'file',
-    multiple: true,
-    action: 'https://google.com',
+    multiple: false,
+    action: 'https://google.com',  // Replace with your actual API
     onChange(info: any) {
       const { status } = info.file;
       if (status !== 'uploading') {
@@ -41,37 +46,11 @@ export default function Home() {
           height={38}
           priority
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <ul className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <ul className="mb-2">
-          The app does not provide professional medical advice, and the creator assumes no liability. Users are encouraged to consult healthcare providers for proper diagnosis. 
+            The app does not provide professional medical advice, and the creator assumes no liability. Users are encouraged to consult healthcare providers for proper diagnosis.
           </ul>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+        </ul>
 
         <Form
           name="basic"
@@ -79,14 +58,14 @@ export default function Home() {
           autoComplete="off"
         >
           <Form.Item label="Upload">
-            <Dragger {...props}>
+            <Dragger {...uploadProps}>
               <p className="ant-upload-drag-icon">
                 <UploadOutlined />
               </p>
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint">
                 Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-                band files
+                banned files.
               </p>
             </Dragger>
           </Form.Item>
@@ -98,10 +77,11 @@ export default function Home() {
           </Form.Item>
         </Form>
       </main>
+
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://nextjs.org/learn"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -116,7 +96,7 @@ export default function Home() {
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://vercel.com/templates?framework=next.js"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -131,7 +111,7 @@ export default function Home() {
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://nextjs.org"
           target="_blank"
           rel="noopener noreferrer"
         >
