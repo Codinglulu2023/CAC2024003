@@ -1,35 +1,64 @@
 "use client"
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Image from "next/image";
-import { useRouter } from 'next/navigation';  // Use Next.js router
+import { useRouter } from 'next/navigation';
 
 const { Dragger } = Upload;
 
 export default function Home() {
-  const router = useRouter();  // Use Next.js router
+  const router = useRouter();
+  const [images, setImages] = useState<string[]>([]);
 
-  const onFinish = (values: any) => {
-    console.log('Form values: ', values);
-    // Handle form submission logic here
-    router.push('/injuryDiagnosisPage');  // Redirect to injury diagnosis page
+  // Clear localStorage and image state on page refresh
+  useEffect(() => {
+    const handlePageReload = () => {
+      localStorage.removeItem('injuryImages');
+      setImages([]);
+    };
+
+    window.addEventListener('beforeunload', handlePageReload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handlePageReload);
+    };
+  }, []);
+
+  // Load images from localStorage on initial render
+  useEffect(() => {
+    const storedImages = localStorage.getItem('injuryImages');
+    if (storedImages) {
+      setImages(JSON.parse(storedImages));
+    }
+  }, []);
+
+  // Function to handle form submission
+  const onFinish = () => {
+    if (images.length > 0) {
+      localStorage.setItem('injuryImages', JSON.stringify(images)); // Store images in localStorage
+    }
+    router.push('/injuryDiagnosisPage'); // Redirect to the next page
   };
 
   const uploadProps = {
     name: 'file',
     multiple: false,
-    action: 'https://google.com',  // Replace with your actual API
+    customRequest({ file, onSuccess }: any) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Read file as Base64
+      reader.onloadend = () => {
+        const newImage = reader.result as string; // New uploaded image
+        setImages((prevImages) => [...prevImages, newImage]); // Add new image to the array
+        onSuccess('ok'); // Simulate successful upload
+        message.success(`${file.name} uploaded successfully`);
+      };
+    },
     onChange(info: any) {
       const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+      if (status === 'error') {
+        message.error(`${info.file.name} upload failed.`);
       }
     },
   };
@@ -46,26 +75,40 @@ export default function Home() {
           height={38}
           priority
         />
-        <ul className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <ul className="mb-2">
-            The app does not provide professional medical advice, and the creator assumes no liability. Users are encouraged to consult healthcare providers for proper diagnosis.
-          </ul>
-        </ul>
+        <p className="text-sm text-center sm:text-left">
+          The app does not provide professional medical advice, and the creator assumes no liability. Users are encouraged to consult healthcare providers for proper diagnosis.
+        </p>
+
+        {/* Display all uploaded images as thumbnails */}
+        {images.length > 0 && (
+          <div>
+            <h3>Uploaded Images:</h3>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {images.map((image, index) => (
+                <img 
+                  key={index}
+                  src={image} 
+                  alt={`Uploaded image ${index + 1}`} 
+                  style={{ width: '100px', height: '100px', objectFit: 'cover' }} // Control image size
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <Form
           name="basic"
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item label="Upload">
+          <Form.Item label="Upload Image">
             <Dragger {...uploadProps}>
               <p className="ant-upload-drag-icon">
                 <UploadOutlined />
               </p>
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-                banned files.
+                Support for a single upload. Do not upload sensitive data.
               </p>
             </Dragger>
           </Form.Item>
@@ -96,7 +139,7 @@ export default function Home() {
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js"
+          href="/injuryDiagnosisPage"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -107,11 +150,11 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Examples
+          Diagnosis Questionnaire
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org"
+          href="/recommendations"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -122,7 +165,7 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Go to nextjs.org →
+          Go to find Urgent Care locations
         </a>
       </footer>
     </div>
