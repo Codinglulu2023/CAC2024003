@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Upload, message } from 'antd';
@@ -11,20 +11,6 @@ const { Dragger } = Upload;
 export default function Home() {
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
-
-  // Clear localStorage and image state on page refresh
-  useEffect(() => {
-    const handlePageReload = () => {
-      localStorage.removeItem('injuryImages');
-      setImages([]);
-    };
-
-    window.addEventListener('beforeunload', handlePageReload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handlePageReload);
-    };
-  }, []);
 
   // Load images from localStorage on initial render
   useEffect(() => {
@@ -45,15 +31,29 @@ export default function Home() {
   const uploadProps = {
     name: 'file',
     multiple: false,
-    customRequest({ file, onSuccess }: any) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file); // Read file as Base64
-      reader.onloadend = () => {
-        const newImage = reader.result as string; // New uploaded image
-        setImages((prevImages) => [...prevImages, newImage]); // Add new image to the array
-        onSuccess('ok'); // Simulate successful upload
-        message.success(`${file.name} uploaded successfully`);
-      };
+    customRequest: async ({ file, onSuccess, onError }: any) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (result.filePath) {
+          setImages((prevImages) => [...prevImages, result.filePath]); // Add new image path to the array
+          onSuccess('ok'); // Simulate successful upload
+          message.success(`${file.name} uploaded successfully`);
+        } else {
+          onError('Upload failed');
+          message.error(`${file.name} upload failed.`);
+        }
+      } catch (error) {
+        onError(error);
+        message.error(`${file.name} upload failed.`);
+      }
     },
     onChange(info: any) {
       const { status } = info.file;
