@@ -143,65 +143,77 @@ export default function Recommendations() {
   const averageLng = urgentCareLocations.reduce((sum, loc) => sum + loc.lng, 0) / urgentCareLocations.length;
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 style={{ fontSize: '32px', marginBottom: '20px', textAlign: 'center' }}>Recommendations</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
+      <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
+        <h1 className="text-4xl font-bold mb-8 text-center text-teal-700">
+          Recommendations
+        </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredRecommendations.map((item) => (
-          <Card
-            key={item.id}
-            title={<span>{item.icon} {item.title}</span>}
-            bordered={true}
-            style={
-              item.id === 9
-                ? { border: '2px solid red', backgroundColor: '#fff3f3' }
-                : { backgroundColor: '#f5f5f5' }
-            }
-            headStyle={item.id === 9 ? { color: 'red' } : {}} 
-            hoverable={true}
-          >
-            <p>{item.description}</p>
-          </Card>
-        ))}
-      </div>
-
-      <div className="mt-10 flex justify-center gap-4">
-        <Button type="primary" onClick={handleGoBack}>
-          Go Back to Injury Diagnosis
-        </Button>
-        <Button type="default" onClick={goBackToHome}>
-          Go Back to Home
-        </Button>
-      </div>
-
-      {/* Conditionally render map based on severity */}
-      {severity === 'severe' && (
-        <div className="mt-10">
-          <h2 style={{ fontSize: '24px', textAlign: 'center', marginBottom: '20px', color: 'red' }}>Urgent Care Locations</h2>
-          <p style={{ textAlign: 'center', marginBottom: '20px' }}>
-            Please visit the nearest urgent care center if the injury is severe or if unusual symptoms persist.
-          </p>
-
-          {/* Leaflet Map */}
-          <div id="map" style={{ width: '100%', height: '450px', border: '1px solid black' }}>
-            <MapContainer center={[averageLat, averageLng]} zoom={15} style={{ height: '100%', width: '100%' }}>
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-
-              {urgentCareLocations.map((location, index) => (
-                <Marker key={index} position={[location.lat, location.lng]}>
-                  <Popup>
-                    <strong>{location.name}</strong><br />
-                    {location.address}
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredRecommendations.map((item) => (
+            <Card
+              key={item.id}
+              title={<span>{item.icon} {item.title}</span>}
+              bordered={true}
+              style={
+                item.id === 9
+                  ? { border: '2px solid red', backgroundColor: '#fff3f3' }
+                  : { backgroundColor: '#f5f5f5' }
+              }
+              headStyle={item.id === 9 ? { color: 'red' } : {}} 
+              hoverable={true}
+            >
+              <p>{item.description}</p>
+            </Card>
+          ))}
         </div>
-      )}
+
+        <div className="mt-10 flex justify-center gap-4">
+          <Button 
+            type="primary" 
+            onClick={handleGoBack}
+            className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+          >
+            Go Back to Injury Diagnosis
+          </Button>
+          <Button 
+            type="default" 
+            onClick={goBackToHome}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+          >
+            Go Back to Home
+          </Button>
+        </div>
+
+        {/* Conditionally render map based on severity */}
+        {severity === 'severe' && (
+          <div className="mt-10">
+            <h2 className="text-3xl font-semibold text-center mb-8 text-red-600">Urgent Care Locations</h2>
+            <p className="text-center text-lg mb-6">
+              Please visit the nearest urgent care center if the injury is severe or if unusual symptoms persist.
+            </p>
+
+            {/* Leaflet Map */}
+            <div id="map" className="w-full h-[450px] border border-gray-300">
+              <MapContainer center={[averageLat, averageLng]} zoom={15} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+
+                {urgentCareLocations.map((location, index) => (
+                  <Marker key={index} position={[location.lat, location.lng]}>
+                    <Popup>
+                      <strong>{location.name}</strong><br />
+                      {location.address}
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
