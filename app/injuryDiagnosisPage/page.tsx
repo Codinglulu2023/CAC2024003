@@ -3,16 +3,53 @@
 import React, { useState } from 'react';
 import { Form, Slider, Radio, Button, message } from 'antd';
 import { useRouter } from 'next/navigation';
+import { analyzeWound, evaluateWoundSeverity } from '../utils/imageAnalysis';
 
 export default function InjuryDiagnosisPage() {
   const [form] = Form.useForm();
   const router = useRouter();
+
 
   // State for form fields
   const [painIntensity, setPainIntensity] = useState(0);
   const [painType, setPainType] = useState('sharp');
   const [swelling, setSwelling] = useState(false);
   const [painDuration, setPainDuration] = useState('');
+
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [woundSeverity, setWoundSeverity] = useState<string[]>([]);
+  const [analysisResult, setAnalysisResult] = useState<string>('');
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Load selected images from localStorage on initial render
+  useEffect(() => {
+    const storedSelectedImages = localStorage.getItem('selectedInjuryImages');
+    if (storedSelectedImages) {
+      setSelectedImages(JSON.parse(storedSelectedImages));
+    } else {
+      message.error('No images selected for analysis. Redirecting to home page.');
+      router.push('/');
+    }
+  }, [router]);
+
+   // Analyze the first image and show the result
+   useEffect(() => {
+    if (selectedImages.length > 0 && canvasRef.current) {
+      const img = new Image();
+      img.src = selectedImages[0]; // Currently analyze only the first image
+      img.onload = () => {
+        canvasRef.current!.width = img.width;
+        canvasRef.current!.height = img.height;
+        const context = canvasRef.current!.getContext('2d');
+        context!.drawImage(img, 0, 0);
+        analyzeWound(canvasRef.current!);
+        // Call evaluateWoundSeverity with contours to determine severity
+        const severity = evaluateWoundSeverity(analyzeWound(canvasRef.current!));
+        setAnalysisResult(severity);
+        message.success(`Wound severity: ${severity}`);
+      };
+    }
+  }, [selectedImages]);
 
   const onFinish = (values: any) => {
     console.log('Form values: ', values);
@@ -48,6 +85,8 @@ export default function InjuryDiagnosisPage() {
         <h1 className="text-4xl font-bold mb-8 text-center text-teal-700">
           Injury Diagnosis
         </h1>
+
+        <canvas id="canvasOutput" ref={canvasRef} className="w-full mb-8 border-2 border-teal-200 rounded-lg shadow-lg"></canvas>
 
         <Form 
           form={form} 
