@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Upload, message, Checkbox, UploadProps } from 'antd';
+import { Form, Button, Upload, message, UploadProps } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
@@ -11,14 +11,12 @@ const { Dragger } = Upload;
 export default function Home() {
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
   // Clear localStorage and image state on page refresh
   useEffect(() => {
     const handlePageReload = () => {
       localStorage.removeItem('injuryImages');
       setImages([]);
-      setSelectedImages([]);
     };
 
     window.addEventListener('beforeunload', handlePageReload);
@@ -31,49 +29,20 @@ export default function Home() {
   // Load images from localStorage on initial render
   useEffect(() => {
     const storedImages = localStorage.getItem('injuryImages');
-    const storedSelectedImages = localStorage.getItem('selectedImages');
     if (storedImages) {
       setImages(JSON.parse(storedImages));
-    }
-    if (storedSelectedImages) {
-      setSelectedImages(JSON.parse(storedSelectedImages));
     }
   }, []);
 
   // Function to handle form submission
   const onFinish = () => {
-    if (selectedImages.length > 0) {
-      // Store the selected images for analysis
-      localStorage.setItem('selectedInjuryImages', JSON.stringify(selectedImages));
+    if (images.length > 0) {
+      // Store the images for analysis
+      localStorage.setItem('injuryImages', JSON.stringify(images));
       router.push('/injuryDiagnosisPage'); // Redirect to the next page
     } else {
-      message.error("Please select at least one image for analysis.");
+      message.error("Please upload at least one image for analysis.");
     }
-  };
-
-  // Function to handle image upload
-  // const handleImageUpload = (event) => {
-  //   const files = Array.from(event.target.files);
-  //   const imagesArray = files.map((file) => URL.createObjectURL(file));
-  //   // Check for duplicate images
-  //   const newImages = imagesArray.filter((image) => !images.includes(image));
-  //   if (newImages.length === 0) {
-  //     message.warning("You cannot upload duplicate images.");
-  //   } else {
-  //     setImages((prevImages) => [...prevImages, ...newImages]);
-  //     localStorage.setItem('injuryImages', JSON.stringify([...images, ...newImages]));
-  //   }
-  //   files.forEach((file) => URL.revokeObjectURL(file));
-  // };
-
-  // Function to handle image selection
-  const handleImageSelect = (image: string) => {
-    if (selectedImages.includes(image)) {
-      setSelectedImages(selectedImages.filter((img) => img !== image));
-    } else {
-      setSelectedImages([...selectedImages, image]);
-    }
-    localStorage.setItem('selectedImages', JSON.stringify([...selectedImages, image]));
   };
 
   // Redirect to injury diagnosis page
@@ -81,19 +50,27 @@ export default function Home() {
     router.push('/injuryDiagnosisPage');
   };
 
+  // Function to handle clearing all images
+  const handleClearImages = () => {
+    setImages([]); // Clear images from state
+    localStorage.removeItem('injuryImages'); // Remove images from localStorage
+    message.success("All uploaded images have been cleared.");
+  };
+
   const uploadProps: UploadProps = {
     name: 'file',
     multiple: true, // Allow multiple files upload
     customRequest(option) {
-      const {file, onSuccess} = option;
+      const { file, onSuccess } = option;
       const reader = new FileReader();
       reader.readAsDataURL(file as File); // Read file as Base64
       reader.onloadend = () => {
         const newImage = reader.result as string; // New uploaded image
         // Check for duplicate images
         if (!images.includes(newImage)) {
-          setImages((prevImages) => [...prevImages, newImage]); // Add new image to the array
-          localStorage.setItem('injuryImages', JSON.stringify([...images, newImage]));
+          const updatedImages = [...images, newImage];
+          setImages(updatedImages); // Add new image to the array
+          localStorage.setItem('injuryImages', JSON.stringify(updatedImages));
           onSuccess?.('ok'); // Simulate successful upload
           message.success(`${(file as File).name} uploaded successfully`);
         } else {
@@ -108,6 +85,21 @@ export default function Home() {
       }
     },
     showUploadList: false, // Hide upload list
+  };
+
+  // New function to handle analysis button click with error handling
+  const handleAnalyze = () => {
+    // Debug information to check the state
+    console.log('Uploaded Images:', images); // Check the uploaded images
+
+    // Check if no images are uploaded
+    if (images.length === 0) {
+      message.error('Please upload at least one image before analyzing.');
+      return; // Stop execution, avoid redirect
+    }
+
+    // Call onFinish if images are uploaded
+    onFinish();
   };
 
   return (
@@ -131,33 +123,36 @@ export default function Home() {
           The app does not provide professional medical advice, and the creator assumes no liability. Users are encouraged to consult healthcare providers for proper diagnosis.
         </p>
 
-        {/* Display all uploaded images with selection option */}
+        {/* Display all uploaded images without selection option */}
         {images.length > 0 && (
           <div className="w-full">
-            <h3 className="text-xl font-semibold mb-4 text-center text-teal-700">Select Images for Analysis:</h3>
+            <h3 className="text-xl font-semibold mb-4 text-center text-teal-700">Uploaded Images:</h3>
             <div className="flex flex-wrap gap-4 justify-center">
               {images.map((image, index) => (
                 <div key={index} className="relative group">
                   <img 
                     src={image} 
                     alt={`Uploaded image ${index + 1}`} 
-                    className={`w-24 h-24 object-cover rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105 ${selectedImages.includes(image) ? 'ring-4 ring-blue-500' : ''}`}
-                    onClick={() => handleImageSelect(image)} // Select the image
-                  />
-                  <Checkbox
-                    className="absolute top-2 right-2"
-                    checked={selectedImages.includes(image)}
-                    onChange={() => handleImageSelect(image)}
+                    className="w-24 h-24 object-cover rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
                   />
                 </div>
               ))}
+            </div>
+            {/* Clear Images Button below thumbnails and centered */}
+            <div className="text-center mt-4">
+              <Button 
+                type="danger" 
+                onClick={handleClearImages} 
+                className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+              >
+                Clear Images
+              </Button>
             </div>
           </div>
         )}
 
         <Form
           name="basic"
-          onFinish={onFinish}
           autoComplete="off"
           className="w-full mt-8"
         >
@@ -177,10 +172,10 @@ export default function Home() {
             <div className="flex gap-4 justify-center">
               <Button 
                 type="primary" 
-                htmlType="submit"
+                onClick={handleAnalyze} // Use new function to handle button click
                 className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
-                Analyze Selected Images
+                Analyze Uploaded Images
               </Button>
               <Button 
                 type="default" 
@@ -224,21 +219,6 @@ export default function Home() {
             height={20}
           />
           CDC Guidelines For Physical Fitness
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:text-blue-600"
-          href="/injuryDiagnosisPage"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={20}
-            height={20}
-          />
-          Diagnosis Questionnaires
         </a>
       </footer>
     </div>

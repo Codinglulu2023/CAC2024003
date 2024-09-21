@@ -71,18 +71,18 @@ const recommendationsData: Recommendations[] = [
   }
 ];
 
-// Adjusted urgent care facilities with closer locations
+// Updated urgent care facilities near 11952
 const urgentCareLocations = [
-  { lat: 40.7128, lng: -74.0060, name: "Urgent Care A", address: "123 Main St, New York, NY" },
-  { lat: 40.7150, lng: -74.0100, name: "Urgent Care B", address: "456 Oak St, New York, NY" },
-  { lat: 40.7172, lng: -74.0130, name: "Urgent Care C", address: "789 Pine St, New York, NY" },
-  { lat: 40.7185, lng: -74.0070, name: "Urgent Care D", address: "321 Elm St, New York, NY" },
-  { lat: 40.7112, lng: -74.0080, name: "Urgent Care E", address: "654 Cedar St, New York, NY" },
-  { lat: 40.7123, lng: -74.0090, name: "Urgent Care F", address: "987 Birch St, New York, NY" },
-  { lat: 40.7100, lng: -74.0050, name: "Urgent Care G", address: "111 Willow St, New York, NY" },
-  { lat: 40.7130, lng: -74.0065, name: "Urgent Care H", address: "222 Maple St, New York, NY" },
-  { lat: 40.7140, lng: -74.0075, name: "Urgent Care I", address: "333 Pineapple St, New York, NY" },
-  { lat: 40.7155, lng: -74.0085, name: "Urgent Care J", address: "444 Apple St, New York, NY" },
+  { lat: 40.9941, lng: -72.5371, name: "CityMD Riverhead Urgent Care", address: "999 Old Country Rd, Riverhead, NY 11901" },
+  { lat: 40.9864, lng: -72.5313, name: "Northwell Health-GoHealth Urgent Care", address: "1842 Old Country Rd, Riverhead, NY 11901" },
+  { lat: 40.9848, lng: -72.5315, name: "Peconic Bay Medical Center", address: "1300 Roanoke Ave, Riverhead, NY 11901" },
+  { lat: 40.9836, lng: -72.5350, name: "North Fork Urgent Care", address: "2040 Main Rd, Laurel, NY 11948" },
+  { lat: 40.9820, lng: -72.5380, name: "East End Urgent Care", address: "1411 Main Rd, Jamesport, NY 11947" },
+  { lat: 40.9785, lng: -72.5405, name: "Mattituck Walk-In Clinic", address: "7555 Main Rd, Mattituck, NY 11952" },
+  { lat: 40.9805, lng: -72.5410, name: "North Fork Immediate Care", address: "1450 Main Rd, Southold, NY 11971" },
+  { lat: 40.9775, lng: -72.5435, name: "Greenport Harbor Urgent Care", address: "222 Manor Pl, Greenport, NY 11944" },
+  { lat: 40.9745, lng: -72.5475, name: "Stony Brook Eastern Long Island Hospital", address: "201 Manor Pl, Greenport, NY 11944" },
+  { lat: 40.9735, lng: -72.5505, name: "LI Urgent Care Manorville", address: "3400 Main Rd, Southold, NY 11971" }
 ];
 
 // Fix for missing Leaflet marker icons
@@ -202,7 +202,7 @@ export default function Recommendations() {
 
             {/* Leaflet Map */}
             <div id="map" className="w-full h-[450px] border border-gray-300">
-              <MapContainer center={[averageLat, averageLng]} zoom={15} style={{ height: '100%', width: '100%' }}>
+              <MapContainer center={[averageLat, averageLng]} zoom={12} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
