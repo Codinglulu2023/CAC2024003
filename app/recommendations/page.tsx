@@ -110,7 +110,7 @@ export default function Recommendations() {
   const evaluateSeverityAndFilter = (data) => {
     // Define severity levels based on diagnosis data
     let severityLevel = 'mild'; // default
-    const { painIntensity, painFrequency, painDuration, swelling, bleeding, bruising, mobility } = data;
+    const { painIntensity, painFrequency, painDuration, bleeding, mobility } = data;
 
     if (painIntensity > 7 || bleeding === 'yes' || mobility === 'yes') {
       severityLevel = 'severe';

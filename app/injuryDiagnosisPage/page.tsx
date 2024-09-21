@@ -10,7 +10,6 @@ export default function InjuryDiagnosisPage() {
 
   // State for form fields
   const [painIntensity, setPainIntensity] = useState(0);
-  const [painType, setPainType] = useState('sharp');
   const [swelling, setSwelling] = useState(false);
   const [painDuration, setPainDuration] = useState('');
 
@@ -24,10 +23,6 @@ export default function InjuryDiagnosisPage() {
 
   const handlePainIntensityChange = (value: number) => {
     setPainIntensity(value);
-  };
-
-  const handlePainTypeChange = (e: any) => {
-    setPainType(e.target.value);
   };
 
   const handleSwellingChange = (e: any) => {

@@ -52,19 +52,19 @@ export default function Home() {
   };
 
   // Function to handle image upload
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const imagesArray = files.map((file) => URL.createObjectURL(file));
-    // Check for duplicate images
-    const newImages = imagesArray.filter((image) => !images.includes(image));
-    if (newImages.length === 0) {
-      message.warning("You cannot upload duplicate images.");
-    } else {
-      setImages((prevImages) => [...prevImages, ...newImages]);
-      localStorage.setItem('injuryImages', JSON.stringify([...images, ...newImages]));
-    }
-    files.forEach((file) => URL.revokeObjectURL(file));
-  };
+  // const handleImageUpload = (event) => {
+  //   const files = Array.from(event.target.files);
+  //   const imagesArray = files.map((file) => URL.createObjectURL(file));
+  //   // Check for duplicate images
+  //   const newImages = imagesArray.filter((image) => !images.includes(image));
+  //   if (newImages.length === 0) {
+  //     message.warning("You cannot upload duplicate images.");
+  //   } else {
+  //     setImages((prevImages) => [...prevImages, ...newImages]);
+  //     localStorage.setItem('injuryImages', JSON.stringify([...images, ...newImages]));
+  //   }
+  //   files.forEach((file) => URL.revokeObjectURL(file));
+  // };
 
   // Function to handle image selection
   const handleImageSelect = (image) => {
@@ -74,6 +74,11 @@ export default function Home() {
       setSelectedImages([...selectedImages, image]);
     }
     localStorage.setItem('selectedImages', JSON.stringify([...selectedImages, image]));
+  };
+
+  // Redirect to injury diagnosis page
+  const handleDiagnosisRedirect = () => {
+    router.push('/injuryDiagnosisPage');
   };
 
   const uploadProps = {
@@ -168,13 +173,22 @@ export default function Home() {
           </Form.Item>
 
           <Form.Item className="text-center">
-            <Button 
-              type="primary" 
-              htmlType="submit"
-              className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-            >
-              Analyze Selected Images
-            </Button>
+            <div className="flex gap-4 justify-center">
+              <Button 
+                type="primary" 
+                htmlType="submit"
+                className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+              >
+                Analyze Selected Images
+              </Button>
+              <Button 
+                type="default" 
+                onClick={handleDiagnosisRedirect}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+              >
+                Go to Diagnosis Questionnaires
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </main>
@@ -223,7 +237,7 @@ export default function Home() {
             width={20}
             height={20}
           />
-          Diagnosis Questionnaire
+          Diagnosis Questionnaires
         </a>
       </footer>
     </div>
