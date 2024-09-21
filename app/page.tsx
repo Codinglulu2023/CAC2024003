@@ -141,7 +141,7 @@ export default function Home() {
             {/* Clear Images Button below thumbnails and centered */}
             <div className="text-center mt-4">
               <Button 
-                type="danger" 
+                type="primary" 
                 onClick={handleClearImages} 
                 className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
