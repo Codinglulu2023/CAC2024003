@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Form, Slider, Radio, Button, message } from 'antd';
+import { Form, Slider, Radio, Button, message, RadioChangeEvent } from 'antd';
 import { useRouter } from 'next/navigation';
 
 export default function InjuryDiagnosisPage() {
@@ -13,7 +13,7 @@ export default function InjuryDiagnosisPage() {
   const [swelling, setSwelling] = useState(false);
   const [painDuration, setPainDuration] = useState('');
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: unknown) => {
     console.log('Form values: ', values);
     // Save diagnosis data to localStorage
     localStorage.setItem('injuryDiagnosisData', JSON.stringify(values));
@@ -25,11 +25,11 @@ export default function InjuryDiagnosisPage() {
     setPainIntensity(value);
   };
 
-  const handleSwellingChange = (e: any) => {
+  const handleSwellingChange = (e: RadioChangeEvent) => {
     setSwelling(e.target.value === 'yes');
   };
 
-  const handlePainDurationChange = (e: any) => {
+  const handlePainDurationChange = (e: RadioChangeEvent) => {
     setPainDuration(e.target.value);
   };
 

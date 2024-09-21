@@ -8,7 +8,7 @@ const uploadDirectory = path.join(process.cwd(), 'public', 'uploads');
 
 export async function POST(request: Request) {
   const formData = await request.formData();
-  const file = formData.get('file') as Blob;
+  const file = formData.get('file') as File;
 
   if (!file) {
     return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });

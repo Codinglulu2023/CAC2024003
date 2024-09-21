@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Upload, message, Checkbox } from 'antd';
+import { Form, Button, Upload, message, Checkbox, UploadProps } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
@@ -67,7 +67,7 @@ export default function Home() {
   // };
 
   // Function to handle image selection
-  const handleImageSelect = (image) => {
+  const handleImageSelect = (image: string) => {
     if (selectedImages.includes(image)) {
       setSelectedImages(selectedImages.filter((img) => img !== image));
     } else {
@@ -81,26 +81,27 @@ export default function Home() {
     router.push('/injuryDiagnosisPage');
   };
 
-  const uploadProps = {
+  const uploadProps: UploadProps = {
     name: 'file',
     multiple: true, // Allow multiple files upload
-    customRequest({ file, onSuccess }: any) {
+    customRequest(option) {
+      const {file, onSuccess} = option;
       const reader = new FileReader();
-      reader.readAsDataURL(file); // Read file as Base64
+      reader.readAsDataURL(file as File); // Read file as Base64
       reader.onloadend = () => {
         const newImage = reader.result as string; // New uploaded image
         // Check for duplicate images
         if (!images.includes(newImage)) {
           setImages((prevImages) => [...prevImages, newImage]); // Add new image to the array
           localStorage.setItem('injuryImages', JSON.stringify([...images, newImage]));
-          onSuccess('ok'); // Simulate successful upload
-          message.success(`${file.name} uploaded successfully`);
+          onSuccess?.('ok'); // Simulate successful upload
+          message.success(`${(file as File).name} uploaded successfully`);
         } else {
           message.warning("You cannot upload duplicate images.");
         }
       };
     },
-    onChange(info: any) {
+    onChange(info) {
       const { status } = info.file;
       if (status === 'error') {
         message.error(`${info.file.name} upload failed.`);
