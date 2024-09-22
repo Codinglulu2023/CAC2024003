@@ -59,6 +59,20 @@ export default function Home() {
     }
   };
 
+  // Function to handle analysis button click with error handling
+  const handleAnalyze = () => {
+    console.log('Uploaded Images:', images); // Check the uploaded images
+
+    // Check if no images are uploaded
+    if (images.length === 0) {
+      message.error('Please upload at least one image before analyzing.');
+      return; // Stop execution, avoid redirect
+    }
+
+    // Call onFinish if images are uploaded
+    onFinish();
+  };
+
   // Redirect to injury diagnosis page
   const handleDiagnosisRedirect = () => {
     router.push('/injuryDiagnosisPage');
@@ -98,21 +112,6 @@ export default function Home() {
       }
     },
     showUploadList: false, // Hide upload list
-  };
-
-  // New function to handle analysis button click with error handling
-  const handleAnalyze = () => {
-    // Debug information to check the state
-    console.log('Uploaded Images:', images); // Check the uploaded images
-
-    // Check if no images are uploaded
-    if (images.length === 0) {
-      message.error('Please upload at least one image before analyzing.');
-      return; // Stop execution, avoid redirect
-    }
-
-    // Call onFinish if images are uploaded
-    onFinish();
   };
 
   return (
@@ -159,16 +158,6 @@ export default function Home() {
                 Clear Image
               </Button>
             </div>
-            {/* Clear Images Button below thumbnails and centered */}
-            <div className="text-center mt-4">
-              <Button 
-                type="primary" 
-                onClick={handleClearImages} 
-                className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-              >
-                Clear Images
-              </Button>
-            </div>
           </div>
         )}
 
@@ -193,7 +182,7 @@ export default function Home() {
             <div className="flex gap-4 justify-center">
               <Button 
                 type="primary" 
-                onClick={onFinish} // Use new function to handle button click
+                onClick={handleAnalyze} // Use handleAnalyze function here
                 className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
                 Analyze Uploaded Image
