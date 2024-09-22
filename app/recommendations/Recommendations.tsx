@@ -73,16 +73,16 @@ const recommendationsData: Recommendations[] = [
 
 // Updated urgent care facilities near 11952
 const urgentCareLocations = [
-  { lat: 40.9941, lng: -72.5371, name: "CityMD Riverhead Urgent Care", address: "999 Old Country Rd, Riverhead, NY 11901" },
-  { lat: 40.9864, lng: -72.5313, name: "Northwell Health-GoHealth Urgent Care", address: "1842 Old Country Rd, Riverhead, NY 11901" },
-  { lat: 40.9848, lng: -72.5315, name: "Peconic Bay Medical Center", address: "1300 Roanoke Ave, Riverhead, NY 11901" },
-  { lat: 40.9836, lng: -72.5350, name: "North Fork Urgent Care", address: "2040 Main Rd, Laurel, NY 11948" },
-  { lat: 40.9820, lng: -72.5380, name: "East End Urgent Care", address: "1411 Main Rd, Jamesport, NY 11947" },
-  { lat: 40.9785, lng: -72.5405, name: "Mattituck Walk-In Clinic", address: "7555 Main Rd, Mattituck, NY 11952" },
-  { lat: 40.9805, lng: -72.5410, name: "North Fork Immediate Care", address: "1450 Main Rd, Southold, NY 11971" },
-  { lat: 40.9775, lng: -72.5435, name: "Greenport Harbor Urgent Care", address: "222 Manor Pl, Greenport, NY 11944" },
-  { lat: 40.9745, lng: -72.5475, name: "Stony Brook Eastern Long Island Hospital", address: "201 Manor Pl, Greenport, NY 11944" },
-  { lat: 40.9735, lng: -72.5505, name: "LI Urgent Care Manorville", address: "3400 Main Rd, Southold, NY 11971" }
+  { lat: 40.917597, lng: -72.664679, name: "CityMD Riverhead Urgent Care", address: "999 Old Country Rd, Riverhead, NY 11901" }, 
+  { lat: 40.919783, lng: -72.660970, name: "Northwell Health-GoHealth Urgent Care", address: "1842 Old Country Rd, Riverhead, NY 11901" }, 
+  { lat: 40.921450, lng: -72.658230, name: "Peconic Bay Medical Center", address: "1300 Roanoke Ave, Riverhead, NY 11901" }, 
+  { lat: 40.920300, lng: -72.674200, name: "North Fork Urgent Care", address: "1101 Old Country Rd, Riverhead, NY 11901" }, 
+  { lat: 40.921300, lng: -72.667000, name: "Mattituck Walk-In Clinic", address: "1149 Old Country Rd, Riverhead, NY 11901" }, 
+  { lat: 40.920500, lng: -72.663000, name: "North Fork Immediate Care", address: "1101 Old Country Rd, Riverhead, NY 11901" }, 
+  { lat: 40.916950, lng: -72.680600, name: "East End Urgent Care", address: "891 Old Country Rd, Riverhead, NY 11901" }, 
+  { lat: 40.922300, lng: -72.660000, name: "Long Island Walk-In Medical Care", address: "1228 E Main St, Riverhead, NY 11901" }, 
+  { lat: 40.918400, lng: -72.675000, name: "Stat Health Riverhead", address: "999 Pulaski St, Riverhead, NY 11901" }, 
+  { lat: 40.91550, lng: -72.673200, name: "Stat Health Walk-In Clinic", address: "54 Commerce Dr, Riverhead, NY 11901" } 
 ];
 
 // Fix for missing Leaflet marker icons
@@ -142,6 +142,16 @@ export default function Recommendations() {
   };
 
   const goBackToHome = () => {
+    // Clear all local storage data
+    localStorage.removeItem('injuryImages');
+    localStorage.removeItem('injurySeverity');
+    localStorage.removeItem('injuryDiagnosisData');
+
+    // Reset state variables
+    setFilteredRecommendations([]);
+    setSeverity('mild');
+
+    // Redirect to home
     router.push('/');
   };
 
@@ -181,7 +191,7 @@ export default function Recommendations() {
             onClick={handleGoBack}
             className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
-            Go Back to Injury Diagnosis
+            Go to Injury Diagnosis
           </Button>
           <Button 
             type="default" 

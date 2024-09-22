@@ -5,6 +5,7 @@ import { Form, Button, Upload, message, UploadProps } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
+import { analyzeImageAndSaveResult } from './utils/imageAnalysis';
 
 const { Dragger } = Upload;
 
@@ -39,9 +40,22 @@ export default function Home() {
     if (images.length > 0) {
       // Store the images for analysis
       localStorage.setItem('injuryImages', JSON.stringify(images));
-      router.push('/injuryDiagnosisPage'); // Redirect to the next page
+      
+      // Analyze the uploaded image
+      const imgElement = document.createElement('img');
+      imgElement.src = images[0]; // Use the first uploaded image for analysis
+
+      imgElement.onload = () => {
+        const severity = analyzeImageAndSaveResult(imgElement); // Analyze the image
+        localStorage.setItem('injurySeverity', severity); // Save the result to localStorage
+        router.push('/imageAnalysis'); // Redirect to the analysis page
+      };
+      
+      imgElement.onerror = () => {
+        message.error("Failed to load the image for analysis.");
+      };
     } else {
-      message.error("Please upload at least one image for analysis.");
+      message.error("Please upload an image for analysis.");
     }
   };
 
@@ -50,31 +64,30 @@ export default function Home() {
     router.push('/injuryDiagnosisPage');
   };
 
-  // Function to handle clearing all images
+  // Function to handle clearing the image
   const handleClearImages = () => {
     setImages([]); // Clear images from state
     localStorage.removeItem('injuryImages'); // Remove images from localStorage
-    message.success("All uploaded images have been cleared.");
+    message.success("Uploaded image has been cleared.");
   };
 
   const uploadProps: UploadProps = {
     name: 'file',
-    multiple: true, // Allow multiple files upload
+    multiple: false, // Disable multiple files upload
     customRequest(option) {
       const { file, onSuccess } = option;
       const reader = new FileReader();
       reader.readAsDataURL(file as File); // Read file as Base64
       reader.onloadend = () => {
         const newImage = reader.result as string; // New uploaded image
-        // Check for duplicate images
-        if (!images.includes(newImage)) {
-          const updatedImages = [...images, newImage];
-          setImages(updatedImages); // Add new image to the array
-          localStorage.setItem('injuryImages', JSON.stringify(updatedImages));
+        // Check if an image is already uploaded
+        if (images.length === 0) {
+          setImages([newImage]); // Only add the new image
+          localStorage.setItem('injuryImages', JSON.stringify([newImage]));
           onSuccess?.('ok'); // Simulate successful upload
           message.success(`${(file as File).name} uploaded successfully`);
         } else {
-          message.warning("You cannot upload duplicate images.");
+          message.warning("You can only upload one image. Please clear the existing image first.");
         }
       };
     },
@@ -85,21 +98,6 @@ export default function Home() {
       }
     },
     showUploadList: false, // Hide upload list
-  };
-
-  // New function to handle analysis button click with error handling
-  const handleAnalyze = () => {
-    // Debug information to check the state
-    console.log('Uploaded Images:', images); // Check the uploaded images
-
-    // Check if no images are uploaded
-    if (images.length === 0) {
-      message.error('Please upload at least one image before analyzing.');
-      return; // Stop execution, avoid redirect
-    }
-
-    // Call onFinish if images are uploaded
-    onFinish();
   };
 
   return (
@@ -123,29 +121,27 @@ export default function Home() {
           The app does not provide professional medical advice, and the creator assumes no liability. Users are encouraged to consult healthcare providers for proper diagnosis.
         </p>
 
-        {/* Display all uploaded images without selection option */}
+        {/* Display uploaded image if exists */}
         {images.length > 0 && (
           <div className="w-full">
-            <h3 className="text-xl font-semibold mb-4 text-center text-teal-700">Uploaded Images:</h3>
+            <h3 className="text-xl font-semibold mb-4 text-center text-teal-700">Uploaded Image:</h3>
             <div className="flex flex-wrap gap-4 justify-center">
-              {images.map((image, index) => (
-                <div key={index} className="relative group">
-                  <img 
-                    src={image} 
-                    alt={`Uploaded image ${index + 1}`} 
-                    className="w-24 h-24 object-cover rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
-                  />
-                </div>
-              ))}
+              <div className="relative group">
+                <img 
+                  src={images[0]} 
+                  alt="Uploaded image" 
+                  className="w-24 h-24 object-cover rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
+                />
+              </div>
             </div>
-            {/* Clear Images Button below thumbnails and centered */}
+            {/* Clear Image Button below thumbnail and centered */}
             <div className="text-center mt-4">
               <Button 
                 type="primary" 
                 onClick={handleClearImages} 
                 className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
-                Clear Images
+                Clear Image
               </Button>
             </div>
           </div>
@@ -163,7 +159,7 @@ export default function Home() {
               </p>
               <p className="ant-upload-text text-teal-800">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint text-teal-600">
-                Support for multiple uploads. Do not upload sensitive data.
+                You can only upload one image. Do not upload sensitive data.
               </p>
             </Dragger>
           </Form.Item>
@@ -172,10 +168,10 @@ export default function Home() {
             <div className="flex gap-4 justify-center">
               <Button 
                 type="primary" 
-                onClick={handleAnalyze} // Use new function to handle button click
+                onClick={onFinish} // Use new function to handle button click
                 className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
-                Analyze Uploaded Images
+                Analyze Uploaded Image
               </Button>
               <Button 
                 type="default" 
