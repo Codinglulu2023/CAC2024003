@@ -100,6 +100,21 @@ export default function Home() {
     showUploadList: false, // Hide upload list
   };
 
+  // New function to handle analysis button click with error handling
+  const handleAnalyze = () => {
+    // Debug information to check the state
+    console.log('Uploaded Images:', images); // Check the uploaded images
+
+    // Check if no images are uploaded
+    if (images.length === 0) {
+      message.error('Please upload at least one image before analyzing.');
+      return; // Stop execution, avoid redirect
+    }
+
+    // Call onFinish if images are uploaded
+    onFinish();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
       <main className="flex flex-col items-center justify-center w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
@@ -142,6 +157,16 @@ export default function Home() {
                 className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
                 Clear Image
+              </Button>
+            </div>
+            {/* Clear Images Button below thumbnails and centered */}
+            <div className="text-center mt-4">
+              <Button 
+                type="primary" 
+                onClick={handleClearImages} 
+                className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+              >
+                Clear Images
               </Button>
             </div>
           </div>
