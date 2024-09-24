@@ -9,14 +9,14 @@ const Analysis = () => {
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
 
   useEffect(() => {
-    // 从 localStorage 获取分析结果
+    // Get the analysis result from localStorage
     const severity = localStorage.getItem('injurySeverity');
 
     if (severity) {
       setAnalysisResult(severity);
     } else {
       message.error('No analysis result found. Redirecting to home.');
-    //   router.push('/'); 
+      router.push('/'); 
     }
   }, [router]);
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import 'leaflet/dist/leaflet.css';
+import { Html, Head, Main, NextScript } from 'next/document';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
         {children}
       </body>
     </html>
