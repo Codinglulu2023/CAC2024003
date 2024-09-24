@@ -1,3 +1,4 @@
+// pages/home.tsx (Home Component)
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -17,6 +18,7 @@ export default function Home() {
   useEffect(() => {
     const handlePageReload = () => {
       localStorage.removeItem('injuryImages');
+      localStorage.removeItem('injurySeverity');
       setImages([]);
     };
 
@@ -36,7 +38,7 @@ export default function Home() {
   }, []);
 
   // Function to handle form submission
-  const onFinish = () => {
+  const onFinish = async () => {
     if (images.length > 0) {
       // Store the images for analysis
       localStorage.setItem('injuryImages', JSON.stringify(images));
@@ -45,10 +47,14 @@ export default function Home() {
       const imgElement = document.createElement('img');
       imgElement.src = images[0]; // Use the first uploaded image for analysis
 
-      imgElement.onload = () => {
-        const severity = analyzeImageAndSaveResult(imgElement); // Analyze the image
-        localStorage.setItem('injurySeverity', severity); // Save the result to localStorage
-        router.push('/imageAnalysis'); // Redirect to the analysis page
+      imgElement.onload = async () => {
+        try {
+          const severity = await analyzeImageAndSaveResult(imgElement); // Analyze the image
+          localStorage.setItem('injurySeverity', severity); // Save the result to localStorage
+          router.push('/imageAnalysis'); // Redirect to the analysis page
+        } catch (error) {
+          message.error("Failed to analyze the image.");
+        }
       };
       
       imgElement.onerror = () => {
@@ -57,20 +63,6 @@ export default function Home() {
     } else {
       message.error("Please upload an image for analysis.");
     }
-  };
-
-  // Function to handle analysis button click with error handling
-  const handleAnalyze = () => {
-    console.log('Uploaded Images:', images); // Check the uploaded images
-
-    // Check if no images are uploaded
-    if (images.length === 0) {
-      message.error('Please upload at least one image before analyzing.');
-      return; // Stop execution, avoid redirect
-    }
-
-    // Call onFinish if images are uploaded
-    onFinish();
   };
 
   // Redirect to injury diagnosis page
@@ -82,6 +74,7 @@ export default function Home() {
   const handleClearImages = () => {
     setImages([]); // Clear images from state
     localStorage.removeItem('injuryImages'); // Remove images from localStorage
+    localStorage.removeItem('injurySeverity'); // Remove severity result from localStorage
     message.success("Uploaded image has been cleared.");
   };
 
@@ -182,7 +175,7 @@ export default function Home() {
             <div className="flex gap-4 justify-center">
               <Button 
                 type="primary" 
-                onClick={handleAnalyze} // Use handleAnalyze function here
+                onClick={onFinish} // Use new function to handle button click
                 className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
                 Analyze Uploaded Image
