@@ -85,7 +85,6 @@ export default function Recommendations() {
       setFilteredRecommendations(filteredRecs);
     } else {
       // If no data, show default recommendations
-      message.error('No diagnosis data found. Showing default recommendations.');
       setSeverity('mild');
       setFilteredRecommendations(recommendationsData.slice(0, 6));
     }
