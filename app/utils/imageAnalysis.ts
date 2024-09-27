@@ -1,8 +1,7 @@
 // utils/imageAnalysis.ts
 import { loadOpenCv } from './opencvLoader';
 
-export const analyzeImageAndSaveResult = async (imageElement: HTMLImageElement): Promise<string> => {
-  try {
+export const analyzeImageAndSaveResult = async (imageInput: string): Promise<string> => {
     // Wait for OpenCV.js to load
     await loadOpenCv();
 
@@ -11,18 +10,20 @@ export const analyzeImageAndSaveResult = async (imageElement: HTMLImageElement):
       return 'mild'; // Default severity if OpenCV.js is not available
     }
 
-    const src = window.cv.imread(imageElement); // Read the image from HTMLImageElement
+    const src = window.cv.imread(imageInput); // Read the image from HTMLImageElement
     const gray = new window.cv.Mat(); // Create a matrix for the grayscale image
     window.cv.cvtColor(src, gray, window.cv.COLOR_RGBA2GRAY, 0); // Convert the image to grayscale
 
     // Calculate the brightness histogram of the image
     const hist = new window.cv.Mat();
-    const mask: null = null;
     const histSize = [256]; // Number of bins
     const ranges = [0, 255]; // Pixel value range
     const channels = [0]; // Only one channel for the grayscale image
+    const vector = new window.cv.MatVector();
+    vector.push_back(gray);
 
-    window.cv.calcHist([gray], channels, mask, hist, histSize, ranges, false);
+
+    window.cv.calcHist(vector, channels, new window.cv.Mat(), hist, histSize, ranges, false);
 
     // Calculate the number of bright pixels in the histogram
     let brightPixels = 0;
@@ -47,8 +48,4 @@ export const analyzeImageAndSaveResult = async (imageElement: HTMLImageElement):
     hist.delete();
 
     return severity;
-  } catch (error) {
-    console.error('Image analysis failed:', error);
-    return 'mild'; // Default severity in case of an error
-  }
 };

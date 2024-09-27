@@ -9,11 +9,12 @@ declare global {
 
 // 定义 OpenCV 的基本接口
 interface OpenCVInterface {
-  imread: (imgElement: HTMLImageElement) => Mat;
+  imread: (imgElement: HTMLImageElement | string) => Mat;
   Mat: new () => Mat;
+  MatVector: new () => MatVector;
   COLOR_RGBA2GRAY: number;
   cvtColor: (src: Mat, dst: Mat, code: number, dstCn?: number) => void;
-  calcHist: (images: Mat[], channels: number[], mask: Mat | null, hist: Mat, histSize: number[], ranges: number[], accumulate?: boolean) => void;
+  calcHist: (images: MatVector, channels: number[], mask: Mat | null, hist: Mat, histSize: number[], ranges: number[], accumulate?: boolean) => void;
   imshow: (canvasId: string, mat: Mat) => void;
   waitKey: (delay?: number) => number;
 }
@@ -22,6 +23,10 @@ interface OpenCVInterface {
 interface Mat {
   delete(): void;
   data32F: Float32Array;
+}
+
+interface MatVector {
+  push_back(x: Mat): void;
 }
 
 // 定义 OpenCV 加载器的状态类型
