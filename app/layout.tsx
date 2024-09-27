@@ -29,7 +29,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
         {children}
       </body>
     </html>
