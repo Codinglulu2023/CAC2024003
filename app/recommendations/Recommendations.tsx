@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, message } from 'antd';
 import { useRouter } from 'next/navigation';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
+import MapComponent from '../components/MapComponent'; // 导入 MapComponent
 
 interface Recommendations {
   id: number;
@@ -71,27 +70,6 @@ const recommendationsData: Recommendations[] = [
   }
 ];
 
-// Updated urgent care facilities near 11952
-const urgentCareLocations = [
-  { lat: 40.917597, lng: -72.664679, name: "CityMD Riverhead Urgent Care", address: "999 Old Country Rd, Riverhead, NY 11901" }, 
-  { lat: 40.919783, lng: -72.660970, name: "Northwell Health-GoHealth Urgent Care", address: "1842 Old Country Rd, Riverhead, NY 11901" }, 
-  { lat: 40.921450, lng: -72.658230, name: "Peconic Bay Medical Center", address: "1300 Roanoke Ave, Riverhead, NY 11901" }, 
-  { lat: 40.920300, lng: -72.674200, name: "North Fork Urgent Care", address: "1101 Old Country Rd, Riverhead, NY 11901" }, 
-  { lat: 40.921300, lng: -72.667000, name: "Mattituck Walk-In Clinic", address: "1149 Old Country Rd, Riverhead, NY 11901" }, 
-  { lat: 40.920500, lng: -72.663000, name: "North Fork Immediate Care", address: "1101 Old Country Rd, Riverhead, NY 11901" }, 
-  { lat: 40.916950, lng: -72.680600, name: "East End Urgent Care", address: "891 Old Country Rd, Riverhead, NY 11901" }, 
-  { lat: 40.922300, lng: -72.660000, name: "Long Island Walk-In Medical Care", address: "1228 E Main St, Riverhead, NY 11901" }, 
-  { lat: 40.918400, lng: -72.675000, name: "Stat Health Riverhead", address: "999 Pulaski St, Riverhead, NY 11901" }, 
-  { lat: 40.91550, lng: -72.673200, name: "Stat Health Walk-In Clinic", address: "54 Commerce Dr, Riverhead, NY 11901" } 
-];
-
-// Fix for missing Leaflet marker icons
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
 export default function Recommendations() {
   const router = useRouter();
   const [filteredRecommendations, setFilteredRecommendations] = useState<Recommendations[]>([]);
@@ -155,10 +133,6 @@ export default function Recommendations() {
     router.push('/');
   };
 
-  // Calculate map center based on urgent care locations
-  const averageLat = urgentCareLocations.reduce((sum, loc) => sum + loc.lat, 0) / urgentCareLocations.length;
-  const averageLng = urgentCareLocations.reduce((sum, loc) => sum + loc.lng, 0) / urgentCareLocations.length;
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
       <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
@@ -210,23 +184,9 @@ export default function Recommendations() {
               Please visit the nearest urgent care center if the injury is severe or if unusual symptoms persist.
             </p>
 
-            {/* Leaflet Map */}
+            {/* 使用 MapComponent 替代 Leaflet 地图 */}
             <div id="map" className="w-full h-[450px] border border-gray-300">
-              <MapContainer center={[averageLat, averageLng]} zoom={12} style={{ height: '100%', width: '100%' }}>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-
-                {urgentCareLocations.map((location, index) => (
-                  <Marker key={index} position={[location.lat, location.lng]}>
-                    <Popup>
-                      <strong>{location.name}</strong><br />
-                      {location.address}
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
+              <MapComponent /> {/* 加载 MapComponent */}
             </div>
           </div>
         )}
