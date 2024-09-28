@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import { useRouter } from 'next/navigation';
-import MapComponent from '../components/MapComponent'; // 导入 MapComponent
+import MapComponent from '../components/MapComponent'; 
 
 interface Recommendations {
   id: number;
@@ -73,45 +73,30 @@ const recommendationsData: Recommendations[] = [
 export default function Recommendations() {
   const router = useRouter();
   const [filteredRecommendations, setFilteredRecommendations] = useState<Recommendations[]>([]);
-  const [severity, setSeverity] = useState('mild'); // Default to mild severity
+  const [injurySeverity, setInjurySeverity] = useState<string>('mild'); // Default to mild severity
 
   useEffect(() => {
-    // Fetch diagnosis data from localStorage
-    const storedData = localStorage.getItem('injuryDiagnosisData');
-    if (storedData) {
-      const diagnosisData = JSON.parse(storedData);
-      const { severityLevel, filteredRecs } = evaluateSeverityAndFilter(diagnosisData);
-      setSeverity(severityLevel);
+    const storedSeverity = localStorage.getItem('injurySeverity');
+    console.log('Retrieved severity from localStorage:', storedSeverity); 
+    if (storedSeverity) {
+      setInjurySeverity(storedSeverity);
+      const filteredRecs = filterRecommendationsBySeverity(storedSeverity);
       setFilteredRecommendations(filteredRecs);
     } else {
-      // If no data, show default recommendations
-      setSeverity('mild');
       setFilteredRecommendations(recommendationsData.slice(0, 6));
     }
   }, []);
 
-  const evaluateSeverityAndFilter = (data: Record<string, string | number>) => {
-    // Define severity levels based on diagnosis data
-    let severityLevel = 'mild'; // default
-    const { painFrequency, painDuration, bleeding, mobility } = data;
-    const painIntensity = data.painIntensity as number;
-    
-    if (painIntensity > 7 || bleeding === 'yes' || mobility === 'yes') {
-      severityLevel = 'severe';
-    } else if (painIntensity > 4 || painFrequency === 'frequent' || painDuration === '3-6 hours') {
-      severityLevel = 'moderate';
-    }
-
-    let filteredRecs = [];
-    if (severityLevel === 'mild') {
+  const filterRecommendationsBySeverity = (severity: string): Recommendations[] => {
+    let filteredRecs: Recommendations[] = [];
+    if (severity === 'mild') {
       filteredRecs = recommendationsData.filter(rec => [1, 3, 4, 5, 6].includes(rec.id));
-    } else if (severityLevel === 'moderate') {
+    } else if (severity === 'moderate') {
       filteredRecs = recommendationsData.filter(rec => [1, 2, 3, 4, 5, 6, 7, 8].includes(rec.id));
-    } else {
-      filteredRecs = recommendationsData; // Show all recommendations including Red Alert
+    } else if (severity === 'severe') {
+      filteredRecs = recommendationsData; 
     }
-
-    return { severityLevel, filteredRecs };
+    return filteredRecs;
   };
 
   const handleGoBack = () => {
@@ -119,16 +104,13 @@ export default function Recommendations() {
   };
 
   const goBackToHome = () => {
-    // Clear all local storage data
     localStorage.removeItem('injuryImages');
     localStorage.removeItem('injurySeverity');
     localStorage.removeItem('injuryDiagnosisData');
 
-    // Reset state variables
     setFilteredRecommendations([]);
-    setSeverity('mild');
+    setInjurySeverity('mild');
 
-    // Redirect to home
     router.push('/');
   };
 
@@ -175,17 +157,15 @@ export default function Recommendations() {
           </Button>
         </div>
 
-        {/* Conditionally render map based on severity */}
-        {severity === 'severe' && (
+        {injurySeverity === 'severe' && (
           <div className="mt-10">
             <h2 className="text-3xl font-semibold text-center mb-8 text-red-600">Urgent Care Locations</h2>
             <p className="text-center text-lg mb-6">
               Please visit the nearest urgent care center if the injury is severe or if unusual symptoms persist.
             </p>
 
-            {/* 使用 MapComponent 替代 Leaflet 地图 */}
             <div id="map" className="w-full h-[450px] border border-gray-300">
-              <MapComponent /> {/* 加载 MapComponent */}
+              <MapComponent />
             </div>
           </div>
         )}
