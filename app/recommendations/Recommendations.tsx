@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, message } from 'antd';
 import { useRouter } from 'next/navigation';
-import MapComponent from '../components/MapComponent'; // 导入 MapComponent
+import MapComponent from '../components/MapComponent'; 
 
 interface Recommendations {
   id: number;
@@ -84,7 +84,6 @@ export default function Recommendations() {
       setFilteredRecommendations(filteredRecs);
     } else {
       setFilteredRecommendations(recommendationsData.slice(0, 6));
-      message.error('No injury severity data found. Showing default recommendations.');
     }
   }, []);
 
