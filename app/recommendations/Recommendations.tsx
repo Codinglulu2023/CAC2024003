@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Button, Card, message } from 'antd';
+import { Button, Card } from 'antd';
 import { useRouter } from 'next/navigation';
 import MapComponent from '../components/MapComponent'; 
 
