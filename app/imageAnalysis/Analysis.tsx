@@ -169,7 +169,7 @@ const ImageAnalysis = () => {
         {/* Check Recommendations Button */}
         {analysisResult && (
           <div className="text-center mt-8">
-            <h2 className="text-2xl font-semibold text-teal-800 mb-4">Your injury is: <span className="text-teal-600">{analysisResult}</span></h2>
+            <h2 className="text-2xl font-semibold text-teal-800 mb-4">Your injury is: <span className="text-teal-600">{analysisResult}</span>. Please check recommendations below.</h2>
             <Button
               type="dashed"
               onClick={handleCheckRecommendations}
