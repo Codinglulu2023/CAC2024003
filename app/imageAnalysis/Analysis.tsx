@@ -76,6 +76,9 @@ const ImageAnalysis = () => {
 
   // Redirect to home page
   const handleGoBackToHome = () => {
+    localStorage.removeItem('injuryImages');
+    localStorage.removeItem('injurySeverity');
+    localStorage.removeItem('injuryDiagnosisData');
     router.push('/');
   };
 
@@ -163,6 +166,13 @@ const ImageAnalysis = () => {
             >
               Analyze Uploaded Image
             </Button>
+            <Button 
+                type="default" 
+                onClick={handleGoBackToHome}
+                className="bg-pink-500 hover:bg-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-4"
+              >
+                Go Back to Home
+            </Button>
           </Form.Item>
         </Form>
 
@@ -176,15 +186,6 @@ const ImageAnalysis = () => {
               className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
             >
               Check Recommendations
-            </Button>
-
-            {/* Go Back to Home Button */}
-            <Button
-              type="default"
-              onClick={handleGoBackToHome}
-              className="bg-pink-500 hover:bg-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-4"
-            >
-              Go Back to Home
             </Button>
           </div>
         )}

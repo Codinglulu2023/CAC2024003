@@ -34,6 +34,9 @@ export default function InjuryDiagnosisPage() {
   };
 
   const goBackToHome = () => {
+    localStorage.removeItem('injuryImages');
+    localStorage.removeItem('injurySeverity');
+    localStorage.removeItem('injuryDiagnosisData');
     router.push('/');
   };
 
