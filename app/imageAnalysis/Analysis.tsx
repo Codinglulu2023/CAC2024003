@@ -161,7 +161,7 @@ const ImageAnalysis = () => {
               onClick={onFinish}
               className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
             >
-              Analyze Image
+              Analyze Uploaded Image
             </Button>
           </Form.Item>
         </Form>
