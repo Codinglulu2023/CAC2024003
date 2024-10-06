@@ -144,16 +144,16 @@ export default function InjuryDiagnosisPage() {
           <Form.Item className="text-center">
             <div className="flex flex-col gap-4 items-center w-full"> 
               <Button 
-                type="primary" 
+                type="dashed" 
                 htmlType="submit"
-                className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+                className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
-                Submit Diagnosis
+                Check Recommendations
               </Button>
               <Button 
-                type="dashed" 
+                type="default" 
                 onClick={goBackToHome}
-                className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+                className="bg-pink-500 hover:bg-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-4"
               >
                 Go Back to Home
               </Button>

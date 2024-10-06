@@ -114,6 +114,17 @@ export default function Recommendations() {
     router.push('/');
   };
 
+  const goBackToImage = () => {
+    localStorage.removeItem('injuryImages');
+    localStorage.removeItem('injurySeverity');
+    localStorage.removeItem('injuryDiagnosisData');
+
+    setFilteredRecommendations([]);
+    setInjurySeverity('mild');
+
+    router.push('/imageAnalysis');
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
       <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
@@ -143,18 +154,25 @@ export default function Recommendations() {
         <div className="mt-10 flex flex-col gap-4 items-center w-full">
           <Button 
             type="primary" 
-            onClick={handleGoBack}
+            onClick={goBackToImage}
             className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
-            Go to Injury Diagnosis
+            Image Analyzer
           </Button>
           <Button 
             type="dashed" 
-            onClick={goBackToHome}
+            onClick={handleGoBack}
             className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
-            Go Back to Image Analyzer
+            Diagnosis Questionnaires
           </Button>
+          <Button
+              type="default"
+              onClick={goBackToHome}
+              className="bg-pink-500 hover:bg-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-4"
+            >
+              Go Back to Home
+            </Button>
         </div>
 
         {injurySeverity === 'severe' && (
