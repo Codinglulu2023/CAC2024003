@@ -140,18 +140,18 @@ export default function Recommendations() {
           ))}
         </div>
 
-        <div className="mt-10 flex justify-center gap-4">
+        <div className="mt-10 flex flex-col gap-4 items-center w-full">
           <Button 
             type="primary" 
             onClick={handleGoBack}
-            className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+            className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
             Go to Injury Diagnosis
           </Button>
           <Button 
-            type="default" 
+            type="dashed" 
             onClick={goBackToHome}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+            className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
             Go Back to Home
           </Button>

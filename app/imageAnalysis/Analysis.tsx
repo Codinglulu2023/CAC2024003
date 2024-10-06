@@ -38,13 +38,15 @@ const Analysis = () => {
         <p className="text-lg text-center mb-8 text-red-600">No analysis result available.</p>
       )}
 
-      <Button 
-        type="primary" 
-        onClick={handleCheckRecommendations}
-        className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-      >
-        Check Recommendations
-      </Button>
+      <div className="flex flex-col gap-4 items-center w-full">
+        <Button 
+          type="dashed" 
+          onClick={handleCheckRecommendations}
+          className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+        >
+          Check Recommendations
+        </Button>
+      </div>
     </div>
   );
 };
