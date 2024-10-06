@@ -153,7 +153,7 @@ export default function Recommendations() {
             onClick={goBackToHome}
             className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
-            Go Back to Home
+            Go Back to Image Analyzer
           </Button>
         </div>
 
