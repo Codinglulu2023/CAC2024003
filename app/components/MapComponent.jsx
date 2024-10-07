@@ -27,11 +27,23 @@ const MapComponent = () => {
   }, []);
 
   useEffect(() => {
+    const loadMapsApi = () => {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        loadNearbyUrgentCare();
+      } else {
+        const intervalId = setInterval(() => {
+          if (window.google && window.google.maps && window.google.maps.places) {
+            loadNearbyUrgentCare();
+            clearInterval(intervalId); 
+          }
+        }, 1000); // Check every second if the API has loaded
+      }
+    };
+
     if (currentPosition.lat !== 0 && currentPosition.lng !== 0) {
-      loadNearbyUrgentCare();
+      loadMapsApi();
     }
   }, [currentPosition]);
-
 
   const loadNearbyUrgentCare = () => {
     const mapElement = document.createElement('div');
@@ -63,7 +75,6 @@ const MapComponent = () => {
           mapContainerStyle={mapStyles}
           zoom={13}
           center={defaultCenter}
-          onLoad={loadNearbyUrgentCare} 
         >
 
           <Marker position={currentPosition} />

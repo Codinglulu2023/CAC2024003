@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 interface DiagnosisFormValues {
   painIntensity: number;
-  swelling: string;
+  bleeding: string;
   painDuration: string;
   mobility: string;
 }
@@ -33,8 +33,8 @@ export default function InjuryDiagnosisPage() {
   };
 
   const evaluateSeverity = (values: DiagnosisFormValues): string => {
-    const { painIntensity, swelling, painDuration, mobility } = values;
-    if (painIntensity >= 8 || swelling === 'yes' || mobility === 'yes') {
+    const { painIntensity, bleeding, painDuration, mobility } = values;
+    if (painIntensity >= 7 || bleeding === 'yes' || mobility === 'yes') {
       return 'severe';
     } else if (painIntensity >= 4 || painDuration === '3-6 hours') {
       return 'moderate';

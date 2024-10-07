@@ -98,9 +98,9 @@ export default function Recommendations() {
     const { painFrequency, painDuration, bleeding, mobility } = data;
     const painIntensity = data.painIntensity as number;
 
-    if (painIntensity > 7 || bleeding === 'yes' || mobility === 'yes') {
+    if (painIntensity >= 7 || bleeding === 'yes' || mobility === 'yes') {
       severityLevel = 'severe';
-    } else if (painIntensity > 4 || painFrequency === 'frequent' || painDuration === '3-6 hours') {
+    } else if (painIntensity >= 4 || painFrequency === 'frequent' || painDuration === '3-6 hours') {
       severityLevel = 'moderate';
     }
 
