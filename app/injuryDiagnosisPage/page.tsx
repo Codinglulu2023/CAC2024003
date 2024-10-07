@@ -12,13 +12,35 @@ export default function InjuryDiagnosisPage() {
   const [painIntensity, setPainIntensity] = useState(0);
   const [swelling, setSwelling] = useState(false);
   const [painDuration, setPainDuration] = useState('');
+  const [injurySeverity, setInjurySeverity] = useState<string | null>(null); // State to hold the injury severity result
+  const [showRecommendationsButton, setShowRecommendationsButton] = useState(false); // State to control when to show recommendations button
 
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: any) => {
     console.log('Form values: ', values);
+    
+    // Evaluate injury severity based on form inputs
+    const severity = evaluateSeverity(values);
+    setInjurySeverity(severity);
+
     // Save diagnosis data to localStorage
     localStorage.setItem('injuryDiagnosisData', JSON.stringify(values));
+    localStorage.setItem('injurySeverity', severity); // Store severity for later use
     message.success('Diagnosis submitted successfully.');
-    router.push('/recommendations'); // Redirect to recommendations page
+
+    // After form submission, show the severity message and Check Recommendations button
+    setShowRecommendationsButton(true);
+  };
+
+  const evaluateSeverity = (values: any) => {
+    // Simple evaluation logic to determine injury severity based on form inputs
+    const { painIntensity, swelling, painDuration, mobility } = values;
+    if (painIntensity >= 8 || swelling === 'yes' || mobility === 'yes') {
+      return 'severe';
+    } else if (painIntensity >= 4 || painDuration === '3-6 hours') {
+      return 'moderate';
+    } else {
+      return 'mild';
+    }
   };
 
   const handlePainIntensityChange = (value: number) => {
@@ -33,12 +55,18 @@ export default function InjuryDiagnosisPage() {
     setPainDuration(e.target.value);
   };
 
+  const goToRecommendations = () => {
+    router.push('/recommendations');
+  };
+
   const goBackToHome = () => {
     localStorage.removeItem('injuryImages');
     localStorage.removeItem('injurySeverity');
     localStorage.removeItem('injuryDiagnosisData');
     router.push('/');
   };
+
+  const commonButtonStyles = "w-full max-w-2xl text-2xl font-semibold py-5 rounded-lg shadow-lg transform hover:scale-105 transition-transform";
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-16 pb-24 gap-16 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
@@ -143,26 +171,48 @@ export default function InjuryDiagnosisPage() {
             </Radio.Group>
           </Form.Item>
 
-          {/* Buttons */}
-          <Form.Item className="text-center">
-            <div className="flex flex-col gap-8 items-center w-full"> 
-              <Button 
-                type="dashed" 
-                htmlType="submit"
-                className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-              >
-                Check Recommendations
-              </Button>
-              <Button 
-                type="default" 
-                onClick={goBackToHome}
-                className="bg-pink-500 hover:bg-pink-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-              >
-                Go Back to Home
-              </Button>
-            </div>
+          <Form.Item className="text-center mt-16">
+            <Button 
+              type="primary" 
+              htmlType="submit"
+              className={`${commonButtonStyles} bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-r hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white`}
+            >
+              Submit
+            </Button>
           </Form.Item>
         </Form>
+
+        {injurySeverity && (
+          <>
+            <div className="text-center mt-8">
+              <h2 className="text-2xl font-semibold text-teal-800 mb-4">
+                Your injury is: <span className="text-teal-600">{injurySeverity}</span>. Please check recommendations below.
+              </h2>
+            </div>
+
+            {showRecommendationsButton && (
+              <div className="text-center mt-8">
+                <Button
+                  type="dashed"
+                  onClick={goToRecommendations}
+                  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+                >
+                  Check Recommendations
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+
+        <div className="mt-5 flex flex-col gap-8 items-center w-full">
+          <Button 
+            type="default"
+            onClick={goBackToHome}
+            className="bg-pink-500 hover:bg-pink-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+          >
+            Go Back to Home
+          </Button>
+        </div>
       </div>
     </div>
   );
