@@ -15,31 +15,24 @@ export default function InjuryDiagnosisPage() {
   const [form] = Form.useForm();
   const router = useRouter();
 
-  // State for form fields
   const [painIntensity, setPainIntensity] = useState(0);
   const [swelling, setSwelling] = useState(false);
   const [painDuration, setPainDuration] = useState('');
-  const [injurySeverity, setInjurySeverity] = useState<string | null>(null); // State to hold the injury severity result
-  const [showRecommendationsButton, setShowRecommendationsButton] = useState(false); // State to control when to show recommendations button
+  const [injurySeverity, setInjurySeverity] = useState<string | null>(null);
+  const [showRecommendationsButton, setShowRecommendationsButton] = useState(false);
 
   const onFinish = (values: DiagnosisFormValues) => {
-    console.log('Form values: ', values);
-
-    // Evaluate injury severity based on form inputs
     const severity = evaluateSeverity(values);
     setInjurySeverity(severity);
 
-    // Save diagnosis data to localStorage
     localStorage.setItem('injuryDiagnosisData', JSON.stringify(values));
-    localStorage.setItem('injurySeverity', severity); // Store severity for later use
+    localStorage.setItem('injurySeverity', severity);
     message.success('Diagnosis submitted successfully.');
 
-    // After form submission, show the severity message and Check Recommendations button
     setShowRecommendationsButton(true);
   };
 
   const evaluateSeverity = (values: DiagnosisFormValues): string => {
-    // Simple evaluation logic to determine injury severity based on form inputs
     const { painIntensity, swelling, painDuration, mobility } = values;
     if (painIntensity >= 8 || swelling === 'yes' || mobility === 'yes') {
       return 'severe';
@@ -73,12 +66,12 @@ export default function InjuryDiagnosisPage() {
     router.push('/');
   };
 
-  const commonButtonStyles = "w-full max-w-2xl text-2xl font-semibold py-5 rounded-lg shadow-lg transform hover:scale-105 transition-transform";
+  const commonButtonStyles = "w-full max-w-xl text-[1.5vw] font-semibold py-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-16 pb-24 gap-16 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
-      <div className="flex flex-col items-center justify-center w-full max-w-4xl p-12 bg-white rounded-lg shadow-lg border-2 border-blue-100">
-        <h1 className="text-8xl font-bold mb-10 text-center text-teal-700">
+    <div className="flex flex-col items-center justify-center min-h-screen p-12 pb-16 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
+      <div className="flex flex-col items-center justify-center w-full max-w-3xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
+        <h1 className="text-[4vw] font-bold mb-8 text-center text-teal-700">
           Injury Diagnosis
         </h1>
 
@@ -90,7 +83,7 @@ export default function InjuryDiagnosisPage() {
         >
           {/* Pain Intensity */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Pain Intensity (0-10)</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Pain Intensity (0-10)</span>} 
             name="painIntensity"
             rules={[{ required: true, message: 'Please select a pain intensity.' }]}
           >
@@ -105,7 +98,7 @@ export default function InjuryDiagnosisPage() {
 
           {/* Frequency of Pain */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Frequency of Pain</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Frequency of Pain</span>} 
             name="painFrequency"
             rules={[{ required: true, message: 'Please select an option for pain frequency.' }]}
           >
@@ -118,7 +111,7 @@ export default function InjuryDiagnosisPage() {
 
           {/* Duration of Pain */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Duration of Pain</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Duration of Pain</span>} 
             name="painDuration"
             rules={[{ required: true, message: 'Please select a pain duration.' }]}
           >
@@ -132,7 +125,7 @@ export default function InjuryDiagnosisPage() {
 
           {/* Swelling */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Is there any swelling?</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Is there any swelling?</span>} 
             name="swelling"
             rules={[{ required: true, message: 'Please select an option for swelling.' }]}
           >
@@ -144,7 +137,7 @@ export default function InjuryDiagnosisPage() {
 
           {/* Bleeding */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Is there any bleeding?</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Is there any bleeding?</span>} 
             name="bleeding"
             rules={[{ required: true, message: 'Please select an option for bleeding.' }]}
           >
@@ -156,7 +149,7 @@ export default function InjuryDiagnosisPage() {
 
           {/* Bruising */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Is there any bruising?</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Is there any bruising?</span>} 
             name="bruising"
             rules={[{ required: true, message: 'Please select an option for bruising.' }]}
           >
@@ -168,7 +161,7 @@ export default function InjuryDiagnosisPage() {
 
           {/* Mobility */}
           <Form.Item 
-            label={<span className="text-teal-700 text-2xl">Is there any difficulty in moving the affected area?</span>} 
+            label={<span className="text-teal-700 text-[1.5vw]">Is there any difficulty in moving the affected area?</span>} 
             name="mobility"
             rules={[{ required: true, message: 'Please select an option for mobility.' }]}
           >
@@ -192,7 +185,7 @@ export default function InjuryDiagnosisPage() {
         {injurySeverity && (
           <>
             <div className="text-center mt-8">
-              <h2 className="text-2xl font-semibold text-teal-800 mb-4">
+              <h2 className="text-[1.5vw] font-semibold text-teal-800 mb-4">
                 Your injury is: <span className="text-teal-600">{injurySeverity}</span>. Please check recommendations below.
               </h2>
             </div>
@@ -202,7 +195,7 @@ export default function InjuryDiagnosisPage() {
                 <Button
                   type="dashed"
                   onClick={goToRecommendations}
-                  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+                  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-[1.5vw] font-semibold py-4 w-full max-w-xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
                 >
                   Check Recommendations
                 </Button>
@@ -215,7 +208,7 @@ export default function InjuryDiagnosisPage() {
           <Button 
             type="default"
             onClick={goBackToHome}
-            className="bg-pink-500 hover:bg-pink-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+            className="bg-pink-500 hover:bg-pink-600 text-white text-[1.5vw] font-semibold py-4 w-full max-w-xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
           >
             Go Back to Home
           </Button>

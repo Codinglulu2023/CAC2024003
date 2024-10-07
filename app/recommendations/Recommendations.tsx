@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, message } from 'antd';
 import { useRouter } from 'next/navigation';
-import MapComponent from '../components/MapComponent'; 
+import MapComponent from '../components/MapComponent';
 
 interface Recommendations {
   id: number;
@@ -12,7 +12,6 @@ interface Recommendations {
   icon: string;
 }
 
-// Recommendations data
 const recommendationsData: Recommendations[] = [
   {
     id: 1,
@@ -73,7 +72,7 @@ const recommendationsData: Recommendations[] = [
 export default function Recommendations() {
   const router = useRouter();
   const [filteredRecommendations, setFilteredRecommendations] = useState<Recommendations[]>([]);
-  const [injurySeverity, setInjurySeverity] = useState<string>('mild'); // Default to mild severity
+  const [injurySeverity, setInjurySeverity] = useState<string>('mild');
 
   useEffect(() => {
     const injuryDiagnosisData = localStorage.getItem('injuryDiagnosisData');
@@ -84,7 +83,7 @@ export default function Recommendations() {
     } else if (injuryDiagnosisData) {
       const diagnosisData = JSON.parse(injuryDiagnosisData);
       const { severityLevel, filteredRecs } = evaluateSeverityAndFilter(diagnosisData);
-      console.log('Retrieved severity from localStorage:', severityLevel); 
+      console.log('Retrieved severity from localStorage:', severityLevel);
       setInjurySeverity(severityLevel);
       setFilteredRecommendations(filteredRecs);
     } else {
@@ -95,8 +94,7 @@ export default function Recommendations() {
   }, []);
 
   const evaluateSeverityAndFilter = (data: Record<string, string | number>) => {
-    // Define severity levels based on diagnosis data
-    let severityLevel = 'mild'; // default
+    let severityLevel = 'mild';
     const { painFrequency, painDuration, bleeding, mobility } = data;
     const painIntensity = data.painIntensity as number;
 
@@ -117,10 +115,10 @@ export default function Recommendations() {
     } else if (severity === 'moderate') {
       filteredRecs = recommendationsData.filter(rec => [1, 2, 3, 4, 5, 6, 7, 8].includes(rec.id));
     } else {
-      filteredRecs = recommendationsData; // Show all recommendations including Red Alert
+      filteredRecs = recommendationsData;
     }
     return filteredRecs;
-  }
+  };
 
   const goBackToHome = () => {
     localStorage.removeItem('injuryImages');
@@ -134,9 +132,9 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-16 pb-24 gap-16 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
-      <div className="w-full max-w-4xl p-12 bg-white rounded-lg shadow-lg border-2 border-blue-100">
-        <h1 className="text-6xl font-bold mb-10 text-center text-teal-700">
+    <div className="flex flex-col items-center justify-center min-h-screen p-12 pb-16 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
+      <div className="w-full max-w-3xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
+        <h1 className="text-[4vw] font-bold mb-8 text-center text-teal-700">
           Recommendations
         </h1>
 
@@ -151,28 +149,28 @@ export default function Recommendations() {
                   ? { border: '2px solid red', backgroundColor: '#fff3f3' }
                   : { backgroundColor: '#f5f5f5' }
               }
-              headStyle={item.id === 9 ? { color: 'red' } : {}} 
+              headStyle={item.id === 9 ? { color: 'red' } : {}}
               hoverable={true}
             >
-              <p className="text-lg">{item.description}</p> {/* Adjusted text size */}
+              <p className="text-[1.2vw]">{item.description}</p>
             </Card>
           ))}
         </div>
 
         <div className="mt-10 flex flex-col gap-8 items-center w-full">
           <Button
-              type="default"
-              onClick={goBackToHome}
-              className="bg-pink-500 hover:bg-pink-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-            >
-              Go Back to Home
-            </Button>
+            type="default"
+            onClick={goBackToHome}
+            className="bg-pink-500 hover:bg-pink-600 text-white text-[1.5vw] font-semibold py-4 w-full max-w-xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+          >
+            Go Back to Home
+          </Button>
         </div>
 
         {injurySeverity === 'severe' && (
           <div className="mt-10">
-            <h2 className="text-2xl font-semibold text-center mb-8 text-red-600">Urgent Care Locations</h2>
-            <p className="text-center text-lg mb-6">
+            <h2 className="text-[1.5vw] font-semibold text-center mb-8 text-red-600">Urgent Care Locations</h2>
+            <p className="text-center text-[1.2vw] mb-6">
               Please visit the nearest urgent care center if the injury is severe or if unusual symptoms persist.
             </p>
 
