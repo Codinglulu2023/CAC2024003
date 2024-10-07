@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Button, Card } from 'antd';
+import { Button, Card, message } from 'antd';
 import { useRouter } from 'next/navigation';
 import MapComponent from '../components/MapComponent'; 
 
@@ -76,27 +76,42 @@ export default function Recommendations() {
   const [injurySeverity, setInjurySeverity] = useState<string>('mild'); // Default to mild severity
 
   useEffect(() => {
-    const storedSeverity = localStorage.getItem('injurySeverity');
-    console.log('Retrieved severity from localStorage:', storedSeverity); 
-    if (storedSeverity) {
-      setInjurySeverity(storedSeverity);
-      const filteredRecs = filterRecommendationsBySeverity(storedSeverity);
+    const storedData = localStorage.getItem('injuryDiagnosisData');
+    if (storedData) {
+      const diagnosisData = JSON.parse(storedData);
+      const { severityLevel, filteredRecs } = evaluateSeverityAndFilter(diagnosisData);
+      console.log('Retrieved severity from localStorage:', severityLevel); 
+      setInjurySeverity(severityLevel);
       setFilteredRecommendations(filteredRecs);
     } else {
+      message.error('No diagnosis data found. Showing default recommendations.');
+      setInjurySeverity('mild');
       setFilteredRecommendations(recommendationsData.slice(0, 6));
     }
   }, []);
 
-  const filterRecommendationsBySeverity = (severity: string): Recommendations[] => {
-    let filteredRecs: Recommendations[] = [];
-    if (severity === 'mild') {
-      filteredRecs = recommendationsData.filter(rec => [1, 3, 4, 5, 6].includes(rec.id));
-    } else if (severity === 'moderate') {
-      filteredRecs = recommendationsData.filter(rec => [1, 2, 3, 4, 5, 6, 7, 8].includes(rec.id));
-    } else if (severity === 'severe') {
-      filteredRecs = recommendationsData; 
+  const evaluateSeverityAndFilter = (data: Record<string, string | number>) => {
+    // Define severity levels based on diagnosis data
+    let severityLevel = 'mild'; // default
+    const { painFrequency, painDuration, bleeding, mobility } = data;
+    const painIntensity = data.painIntensity as number;
+
+    if (painIntensity > 7 || bleeding === 'yes' || mobility === 'yes') {
+      severityLevel = 'severe';
+    } else if (painIntensity > 4 || painFrequency === 'frequent' || painDuration === '3-6 hours') {
+      severityLevel = 'moderate';
     }
-    return filteredRecs;
+
+    let filteredRecs = [];
+    if (severityLevel === 'mild') {
+      filteredRecs = recommendationsData.filter(rec => [1, 3, 4, 5, 6].includes(rec.id));
+    } else if (severityLevel === 'moderate') {
+      filteredRecs = recommendationsData.filter(rec => [1, 2, 3, 4, 5, 6, 7, 8].includes(rec.id));
+    } else {
+      filteredRecs = recommendationsData; // Show all recommendations including Red Alert
+    }
+
+    return { severityLevel, filteredRecs };
   };
 
   const handleGoBack = () => {
@@ -152,20 +167,6 @@ export default function Recommendations() {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 items-center w-full">
-          <Button 
-            type="primary" 
-            onClick={goBackToImage}
-            className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-          >
-            Image Analyzer
-          </Button>
-          <Button 
-            type="dashed" 
-            onClick={handleGoBack}
-            className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:bg-gradient-to-r hover:from-blue-500 hover:via-purple-600 hover:to-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-          >
-            Diagnosis Questionnaires
-          </Button>
           <Button
               type="default"
               onClick={goBackToHome}
