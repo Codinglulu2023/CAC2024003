@@ -112,23 +112,23 @@ const ImageAnalysis = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
-      <main className="flex flex-col items-center justify-center w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
-        <h1 className="text-6xl font-bold mb-6 text-center text-teal-700">
+    <div className="flex flex-col items-center justify-center min-h-screen p-16 pb-24 gap-16 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
+      <main className="flex flex-col items-center justify-center w-full max-w-4xl p-12 bg-white rounded-lg shadow-lg border-2 border-blue-100">
+        <h1 className="text-8xl font-bold mb-6 text-center text-teal-700">
           Image Analyzer
         </h1>
 
         {/* Display uploaded image if exists */}
         {images.length > 0 && (
           <div className="w-full">
-            <h3 className="text-xl font-semibold mb-4 text-center text-teal-700">Uploaded Image:</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-center text-teal-700">Uploaded Image:</h3>
             <div className="flex flex-wrap gap-4 justify-center">
               <div className="relative group">
                 <img
                   id="imageInput"
                   src={images[0]}
                   alt="Uploaded image"
-                  className="w-24 h-24 object-cover rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
+                  className="w-40 h-40 object-cover rounded-lg shadow-md cursor-pointer transition-transform transform hover:scale-105"
                 />
               </div>
             </div>
@@ -137,7 +137,7 @@ const ImageAnalysis = () => {
               <Button
                 type="primary"
                 onClick={handleClearImages}
-                className="bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+                className="bg-red-500 hover:bg-red-600 text-white text-2xl font-semibold py-2 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
               >
                 Clear Image
               </Button>
@@ -147,31 +147,32 @@ const ImageAnalysis = () => {
 
         <Form name="basic" autoComplete="off" className="w-full mt-8">
           <Form.Item>
-            <Dragger {...uploadProps} className="bg-gray-100 border-dashed rounded-lg p-8 transition-transform transform hover:scale-105">
+            <Dragger {...uploadProps} className="bg-gray-100 border-dashed rounded-lg p-8 shadow-lg transition-transform transform hover:scale-105">
               <p className="ant-upload-drag-icon">
                 <UploadOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
               </p>
-              <p className="ant-upload-text text-teal-800">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint text-teal-600">
+              <p className="ant-upload-text text-teal-800 text-2xl">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint text-teal-600 text-2xl">
                 You can only upload one image. Do not upload sensitive data.
               </p>
             </Dragger>
           </Form.Item>
 
-          <Form.Item className="text-center">
+          {/* Buttons vertically aligned with gap and max width */}
+          <Form.Item className="flex flex-col items-center w-full">
             <Button
               type="primary"
               onClick={onFinish}
-              className="bg-teal-600 hover:bg-teal-700 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+              className="bg-teal-600 hover:bg-teal-700 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
             >
               Analyze Uploaded Image
             </Button>
             <Button 
-                type="default" 
-                onClick={handleGoBackToHome}
-                className="bg-pink-500 hover:bg-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-4"
-              >
-                Go Back to Home
+              type="default" 
+              onClick={handleGoBackToHome}
+              className="bg-pink-500 hover:bg-pink-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-6" // Added mt-6 to create space between buttons
+            >
+              Go Back to Home
             </Button>
           </Form.Item>
         </Form>
@@ -183,7 +184,7 @@ const ImageAnalysis = () => {
             <Button
               type="dashed"
               onClick={handleCheckRecommendations}
-              className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform"
+              className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-orange-600 hover:to-red-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
             >
               Check Recommendations
             </Button>

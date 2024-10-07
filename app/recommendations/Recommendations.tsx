@@ -114,10 +114,6 @@ export default function Recommendations() {
     return { severityLevel, filteredRecs };
   };
 
-  const handleGoBack = () => {
-    router.push('/injuryDiagnosisPage');
-  };
-
   const goBackToHome = () => {
     localStorage.removeItem('injuryImages');
     localStorage.removeItem('injurySeverity');
@@ -129,21 +125,10 @@ export default function Recommendations() {
     router.push('/');
   };
 
-  const goBackToImage = () => {
-    localStorage.removeItem('injuryImages');
-    localStorage.removeItem('injurySeverity');
-    localStorage.removeItem('injuryDiagnosisData');
-
-    setFilteredRecommendations([]);
-    setInjurySeverity('mild');
-
-    router.push('/imageAnalysis');
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-12 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
-      <div className="w-full max-w-4xl p-8 bg-white rounded-lg shadow-lg border-2 border-blue-100">
-        <h1 className="text-4xl font-bold mb-8 text-center text-teal-700">
+    <div className="flex flex-col items-center justify-center min-h-screen p-16 pb-24 gap-16 bg-gradient-to-r from-blue-200 via-teal-200 to-green-200">
+      <div className="w-full max-w-4xl p-12 bg-white rounded-lg shadow-lg border-2 border-blue-100">
+        <h1 className="text-6xl font-bold mb-10 text-center text-teal-700">
           Recommendations
         </h1>
 
@@ -161,16 +146,16 @@ export default function Recommendations() {
               headStyle={item.id === 9 ? { color: 'red' } : {}} 
               hoverable={true}
             >
-              <p>{item.description}</p>
+              <p className="text-lg">{item.description}</p> {/* Adjusted text size */}
             </Card>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 items-center w-full">
+        <div className="mt-10 flex flex-col gap-8 items-center w-full">
           <Button
               type="default"
               onClick={goBackToHome}
-              className="bg-pink-500 hover:bg-pink-600 text-white text-lg font-semibold py-3 w-full max-w-xs rounded-lg shadow-lg transform hover:scale-105 transition-transform mt-4"
+              className="bg-pink-500 hover:bg-pink-600 text-white text-2xl font-semibold py-5 w-full max-w-2xl rounded-lg shadow-lg transform hover:scale-105 transition-transform"
             >
               Go Back to Home
             </Button>
@@ -178,7 +163,7 @@ export default function Recommendations() {
 
         {injurySeverity === 'severe' && (
           <div className="mt-10">
-            <h2 className="text-3xl font-semibold text-center mb-8 text-red-600">Urgent Care Locations</h2>
+            <h2 className="text-2xl font-semibold text-center mb-8 text-red-600">Urgent Care Locations</h2>
             <p className="text-center text-lg mb-6">
               Please visit the nearest urgent care center if the injury is severe or if unusual symptoms persist.
             </p>
