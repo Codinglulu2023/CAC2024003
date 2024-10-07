@@ -4,6 +4,13 @@ import React, { useState } from 'react';
 import { Form, Slider, Radio, Button, message, RadioChangeEvent } from 'antd';
 import { useRouter } from 'next/navigation';
 
+interface DiagnosisFormValues {
+  painIntensity: number;
+  swelling: string;
+  painDuration: string;
+  mobility: string;
+}
+
 export default function InjuryDiagnosisPage() {
   const [form] = Form.useForm();
   const router = useRouter();
@@ -15,9 +22,9 @@ export default function InjuryDiagnosisPage() {
   const [injurySeverity, setInjurySeverity] = useState<string | null>(null); // State to hold the injury severity result
   const [showRecommendationsButton, setShowRecommendationsButton] = useState(false); // State to control when to show recommendations button
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: DiagnosisFormValues) => {
     console.log('Form values: ', values);
-    
+
     // Evaluate injury severity based on form inputs
     const severity = evaluateSeverity(values);
     setInjurySeverity(severity);
@@ -31,7 +38,7 @@ export default function InjuryDiagnosisPage() {
     setShowRecommendationsButton(true);
   };
 
-  const evaluateSeverity = (values: any) => {
+  const evaluateSeverity = (values: DiagnosisFormValues): string => {
     // Simple evaluation logic to determine injury severity based on form inputs
     const { painIntensity, swelling, painDuration, mobility } = values;
     if (painIntensity >= 8 || swelling === 'yes' || mobility === 'yes') {
