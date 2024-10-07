@@ -76,9 +76,13 @@ export default function Recommendations() {
   const [injurySeverity, setInjurySeverity] = useState<string>('mild'); // Default to mild severity
 
   useEffect(() => {
-    const storedData = localStorage.getItem('injuryDiagnosisData');
-    if (storedData) {
-      const diagnosisData = JSON.parse(storedData);
+    const injuryDiagnosisData = localStorage.getItem('injuryDiagnosisData');
+    const injurySeverity = localStorage.getItem('injurySeverity');
+    if (injurySeverity) {
+      setInjurySeverity(injurySeverity);
+      setFilteredRecommendations(getRecommendationsFromSeverity(injurySeverity));
+    } else if (injuryDiagnosisData) {
+      const diagnosisData = JSON.parse(injuryDiagnosisData);
       const { severityLevel, filteredRecs } = evaluateSeverityAndFilter(diagnosisData);
       console.log('Retrieved severity from localStorage:', severityLevel); 
       setInjurySeverity(severityLevel);
@@ -102,17 +106,21 @@ export default function Recommendations() {
       severityLevel = 'moderate';
     }
 
+    const filteredRecs = getRecommendationsFromSeverity(severityLevel);
+    return { severityLevel, filteredRecs };
+  };
+
+  const getRecommendationsFromSeverity = (severity: string) => {
     let filteredRecs = [];
-    if (severityLevel === 'mild') {
+    if (severity === 'mild') {
       filteredRecs = recommendationsData.filter(rec => [1, 3, 4, 5, 6].includes(rec.id));
-    } else if (severityLevel === 'moderate') {
+    } else if (severity === 'moderate') {
       filteredRecs = recommendationsData.filter(rec => [1, 2, 3, 4, 5, 6, 7, 8].includes(rec.id));
     } else {
       filteredRecs = recommendationsData; // Show all recommendations including Red Alert
     }
-
-    return { severityLevel, filteredRecs };
-  };
+    return filteredRecs;
+  }
 
   const goBackToHome = () => {
     localStorage.removeItem('injuryImages');
