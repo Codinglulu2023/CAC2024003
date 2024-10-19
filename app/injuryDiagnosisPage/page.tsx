@@ -1,7 +1,7 @@
-"use client";
+"use client"; 
 
 import React, { useState } from 'react';
-import { Form, Slider, Radio, Button, message, RadioChangeEvent } from 'antd';
+import { Form, Slider, Radio, Button, Input, message, RadioChangeEvent } from 'antd';
 import { useRouter } from 'next/navigation';
 
 interface DiagnosisFormValues {
@@ -9,6 +9,9 @@ interface DiagnosisFormValues {
   bleeding: string;
   painDuration: string;
   mobility: string;
+  activityWhenPainBegan?: string;
+  specificMotion?: string;
+  similarInjury: string;
 }
 
 export default function InjuryDiagnosisPage() {
@@ -96,6 +99,17 @@ export default function InjuryDiagnosisPage() {
             />
           </Form.Item>
 
+          <Form.Item 
+            label={<span className="text-teal-700 text-[1.5vw]">Have you experienced a similar injury in the past?</span>} 
+            name="similarInjury"
+            rules={[{ required: true, message: 'Please select yes or no.' }]}
+          >
+            <Radio.Group>
+              <Radio value="yes">Yes</Radio>
+              <Radio value="no">No</Radio>
+            </Radio.Group>
+          </Form.Item>
+
           {/* Frequency of Pain */}
           <Form.Item 
             label={<span className="text-teal-700 text-[1.5vw]">Frequency of Pain</span>} 
@@ -169,6 +183,20 @@ export default function InjuryDiagnosisPage() {
               <Radio value="yes">Yes</Radio>
               <Radio value="no">No</Radio>
             </Radio.Group>
+          </Form.Item>
+
+          <Form.Item 
+            label={<span className="text-teal-700 text-[1.5vw]">What activity were you doing when the pain began?</span>} 
+            name="activityWhenPainBegan"
+          >
+            <Input.TextArea rows={2} placeholder="Describe the activity you were doing." />
+          </Form.Item>
+
+          <Form.Item 
+            label={<span className="text-teal-700 text-[1.5vw]">Were you running, jumping, lifting, or performing a specific motion? Please specify.</span>} 
+            name="specificMotion"
+          >
+            <Input.TextArea rows={2} placeholder="Describe any specific motion." />
           </Form.Item>
 
           <Form.Item className="text-center mt-16">
